@@ -1,5 +1,11 @@
 # 🎨 E-Commerce Museo Nacional del Prado (MPA)
 
+**Alumno:** Daniel Pérez Núñez  
+**Asignatura:** Sistemas Software Basados en Web  
+**Curso:** 2025/2026
+
+---
+
 Una aplicación web multipágina (MPA) premium construida con **Node.js**, **Express** y **Nunjucks**, utilizando **Prisma ORM** con una base de datos **PostgreSQL** sobre Docker. El proyecto incluye un sistema de Web Scraping para la obtención de datos artísticos reales.
 
 ## 🚀 Características Principales
