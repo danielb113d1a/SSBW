@@ -1,0 +1,50 @@
+{% extends "base.njk" %}
+
+{% block title %}{{ producto.título }} - Colección Premium{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+    <!-- Breadcrumb / Back button -->
+    <a href="/" class="btn mb-4 rounded-pill px-4 text-white" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s;">
+        ← Volver al catálogo
+    </a>
+
+    <!-- Detail Box -->
+    <div class="row align-items-center p-md-5 p-4 rounded-5 shadow-lg position-relative overflow-hidden" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);">
+        
+        <!-- Subtle Glow Background -->
+        <div class="position-absolute rounded-circle" style="width: 400px; height: 400px; background: var(--primary-accent); filter: blur(150px); opacity: 0.15; top: -100px; left: -100px; z-index: 0;"></div>
+
+        <!-- Image Column -->
+        <div class="col-lg-6 text-center mb-5 mb-lg-0 position-relative" style="z-index: 1;">
+            <img src="/public/imagenes/{{ producto.imagen }}" 
+                 class="img-fluid rounded-4 shadow" 
+                 alt="{{ producto.título }}" 
+                 style="max-height: 650px; border: 1px solid rgba(255,255,255,0.1); transition: transform 0.5s;">
+        </div>
+
+        <!-- Details Column -->
+        <div class="col-lg-6 ps-lg-5 position-relative" style="z-index: 1;">
+            <h1 class="display-5 fw-bolder mb-3" style="line-height: 1.1;">{{ producto.título }}</h1>
+            
+            <div class="d-flex align-items-center mb-4">
+                <span class="display-6 fw-bold pe-3 me-3 border-end border-secondary" style="color: var(--secondary-accent);">{{ producto.precio }} €</span>
+                <span class="badge rounded-pill bg-success px-3 py-2 fw-semibold">Garantía del Museo</span>
+            </div>
+            
+            <hr style="border-color: rgba(255,255,255,0.1) !important;" class="mb-4">
+            
+            <h5 class="text-secondary tracking-widest text-uppercase fw-bold fs-6 mb-3">Sobre la obra</h5>
+            <p class="lead mb-5" style="line-height: 1.8; color: #b0b8c4; font-size: 1.1rem; white-space: pre-wrap;">{{ producto.descripción }}</p>
+            
+            <form action="/al-carrito/{{ producto.id }}" method="POST" class="d-grid gap-3 d-sm-flex justify-content-sm-start">
+                <input type="number" name="cantidad" value="1" min="1" class="form-control text-center bg-dark text-white border-secondary fs-5 shadow-sm fw-bold" style="width: 100px;">
+                <button type="submit" class="btn btn-gradient btn-lg rounded-pill px-5 py-3 fs-5 shadow-lg flex-grow-1 flex-md-grow-0 text-truncate">
+                    🛒 Añadir a la cesta
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

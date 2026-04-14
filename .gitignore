@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Environment Variables (SENSITIVE)
+.env
+
+# Database & Docker
+pgdata/
+
+# Logs
+logs/
+*.log
+
+# Scraped Content (Large media) - Recommended to ignore to keep repo light
+imagenes/
+
+# Prisma
+generated/
+/prisma/migrations/
+
+# OS Files
+.DS_Store
+Thumbs.db

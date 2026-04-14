@@ -1,0 +1,101 @@
+{% extends "base.njk" %}
+
+{% block title %}Mi Carrito - Tienda Prado{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="d-flex align-items-center mb-5 mt-3">
+            <span class="fs-1 me-3">🛒</span>
+            <h1 class="display-5 fw-bolder m-0" style="background: linear-gradient(90deg, #8a2be2, #00e5ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Tu Cesta de Arte</h1>
+        </div>
+
+        {% if items.length > 0 %}
+        <div class="card glass-card p-0 overflow-hidden shadow-lg mb-5" style="border-color: rgba(255,255,255,0.05)!important;">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle mb-0" style="--bs-table-bg: transparent; --bs-table-hover-bg: rgba(255,255,255,0.02); color: #fff;">
+                    <thead class="text-secondary border-bottom border-secondary-subtle">
+                        <tr>
+                            <th class="ps-4 py-4 fw-bold text-uppercase tracking-wider">Obra</th>
+                            <th class="py-4 fw-bold text-uppercase tracking-wider text-center">Cantidad</th>
+                            <th class="py-4 fw-bold text-uppercase tracking-wider text-end">Precio Ud.</th>
+                            <th class="py-4 fw-bold text-uppercase tracking-wider text-end">Subtotal</th>
+                            <th class="pe-4 py-4 text-end"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="border-0">
+                        {% for item in items %}
+                        <tr style="border-color: rgba(255,255,255,0.05)!important;">
+                            <td class="ps-4 py-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-3 overflow-hidden me-3" style="width: 80px; height: 80px; border: 1px solid rgba(255,255,255,0.1);">
+                                        <img src="/public/imagenes/{{ item.imagen }}" alt="{{ item.título }}" class="w-100 h-100" style="object-fit: cover;">
+                                    </div>
+                                    <span class="fw-semibold fs-5">{{ item.título }}</span>
+                                </div>
+                            </td>
+                            <td class="py-4 text-center">
+                                <span class="badge rounded-pill bg-dark border border-secondary px-3 py-2 fs-6">{{ item.cantidad }}</span>
+                            </td>
+                            <td class="py-4 text-end fs-5 text-secondary">
+                                {{ item.precio }} €
+                            </td>
+                            <td class="py-4 text-end fs-5 fw-bold text-info">
+                                {{ item.subtotal }} €
+                            </td>
+                            <td class="pe-4 py-4 text-end">
+                                <form action="/carrito/eliminar/{{ item.id }}" method="POST" class="m-0">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3 py-2" title="Eliminar del carrito" style="border-color: rgba(220,53,69,0.3);">
+                                        🗑️ Quitar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="card-footer p-4 border-top border-secondary-subtle" style="background: rgba(255,255,255,0.02);">
+                <div class="row align-items-center">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <form action="/carrito/vaciar" method="POST" class="m-0" onsubmit="return confirm('¿Estás seguro de que deseas vaciar toda tu cesta?');">
+                            <button type="submit" class="btn btn-link text-decoration-none text-danger fw-semibold px-0">
+                                <span class="me-1">❌</span> Vaciar toda la cesta
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <div class="d-inline-block p-4 rounded-4 shadow-sm" style="background: rgba(0,229,255,0.05); border: 1px solid rgba(0,229,255,0.1);">
+                            <span class="text-secondary fs-5 me-3">Total del Pedido:</span>
+                            <span class="display-6 fw-bold text-info">{{ total }} €</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5 gap-3">
+            <a href="/" class="btn btn-outline-light btn-lg rounded-pill px-5 py-3 fs-5 fw-semibold border-secondary" style="transition: all 0.3s;">
+                🛒 Seguir Comprando
+            </a>
+            <form action="/carrito/pagar" method="POST" class="m-0 w-100 w-md-auto">
+                <button type="submit" class="btn btn-gradient btn-lg rounded-pill px-5 py-3 fs-3 fw-bolder shadow-lg w-100">
+                    Finalizar y Pagar Ahora ✨
+                </button>
+            </form>
+        </div>
+
+        {% else %}
+        <div class="text-center py-5 my-5 rounded-5 shadow-lg border border-secondary-subtle" style="background: rgba(255,255,255,0.01);">
+            <div class="display-1 mb-4 opacity-25">🖼️</div>
+            <h2 class="display-6 fw-light text-secondary mb-4">Tu galería personal está vacía</h2>
+            <p class="lead text-muted mb-5">Explora nuestras colecciones y añade obras maestras a tu carrito.</p>
+            <a href="/" class="btn btn-gradient btn-lg rounded-pill px-5 py-3 shadow-lg">
+                Ir al Catálogo de Arte
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

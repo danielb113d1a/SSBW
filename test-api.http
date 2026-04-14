@@ -1,0 +1,42 @@
+### Petición 1: Obtener todos los productos (Limitado por defecto o total)
+GET http://localhost:3000/api/productos
+
+###
+
+### Petición 2: Obtener productos con Paginación (saltamos del 0 al indice 3) y Ordenación
+GET http://localhost:3000/api/productos?desde=0&hasta=3&ordenacion=precio_desc
+
+###
+
+### Petición 3: Obtener un producto por ID explícitamente (Ejemplo ID: 1)
+GET http://localhost:3000/api/productos/1
+
+###
+
+### Petición 4: Añadir un producto nuevo (POST) con Body JSON
+POST http://localhost:3000/api/productos
+Content-Type: application/json
+
+{
+    "título": "Nueva Obra Maestra (Test)",
+    "descripción": "Pieza ingresada electrónicamente mediante API RESTFul de pruebas.",
+    "precio": 299.99,
+    "imagen": "test_api.jpg"
+}
+
+###
+
+### Petición 5: Actualizar un producto existente (PUT) - Asumiendo ID 25 se genera del test previo
+PUT http://localhost:3000/api/productos/25
+Content-Type: application/json
+
+{
+    "descripción": "Descripción actualizada vía PUT para la obra 25. Ahora es más exclusiva.",
+    "precio": 350.00
+}
+
+###
+
+### Petición 6: Eliminar el producto de prueba (DELETE)
+DELETE http://localhost:3000/api/productos/25
+

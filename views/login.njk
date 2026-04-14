@@ -1,0 +1,31 @@
+{% extends "base.njk" %}
+
+{% block title %}Iniciar Sesión - Tienda Prado{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 col-lg-5">
+        <div class="card glass-card p-5 border-secondary shadow-lg">
+            <h2 class="text-center fw-bolder mb-4 display-6" style="background: linear-gradient(90deg, #8a2be2, #00e5ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🔐 Seguridad</h2>
+            
+            {% if error %}
+            <div class="alert alert-danger bg-danger bg-opacity-25 border-danger text-white text-center rounded-pill py-3 px-4 mb-4 fw-semibold shadow-sm">
+                Credenciales inválidas. Por favor, revisa tus datos y vuelve a intentarlo.
+            </div>
+            {% endif %}
+            
+            <form action="/login" method="POST">
+                <div class="mb-4">
+                    <label class="form-label text-secondary fw-semibold ps-2">Correo Electrónico de Acceso</label>
+                    <input type="email" name="email" class="form-control form-control-lg bg-dark text-white border border-secondary rounded-pill ps-4" style="background: rgba(255,255,255,0.05) !important;" required>
+                </div>
+                <div class="mb-5">
+                    <label class="form-label text-secondary fw-semibold ps-2">Contraseña</label>
+                    <input type="password" name="contraseña" class="form-control form-control-lg bg-dark text-white border border-secondary rounded-pill ps-4" style="background: rgba(255,255,255,0.05) !important;" required>
+                </div>
+                <button type="submit" class="btn btn-gradient btn-lg w-100 rounded-pill shadow-lg py-3 fw-bold fs-5 tracking-widest text-uppercase">Identificarse</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

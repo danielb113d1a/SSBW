@@ -1,0 +1,50 @@
+{% extends "base.njk" %}
+
+{% block title %}{{ titulo_pagina }} - Gestión Admin{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-3">
+    <div class="col-lg-8">
+        <div class="card glass-card p-4 p-md-5 shadow-lg" style="border: 1px solid rgba(0, 229, 255, 0.4);">
+            <div class="d-flex align-items-center mb-4">
+                <span class="fs-1 me-3">⚡</span>
+                <h2 class="fw-bolder m-0" style="color: var(--secondary-accent);">{{ titulo_pagina }}</h2>
+            </div>
+            
+            <form action="{{ action }}" method="POST">
+                <div class="mb-4">
+                    <label class="form-label text-secondary fw-semibold ds-4">Título Oficial de la Obra</label>
+                    <input type="text" name="título" class="form-control form-control-lg bg-dark text-white border-secondary shadow-sm" value="{{ producto.título }}" placeholder="Ej. Retrato de la Monarquía" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label text-secondary fw-semibold">Descripción del Archivo e Historia</label>
+                    <textarea name="descripción" rows="6" class="form-control bg-dark text-white border-secondary shadow-sm" placeholder="Añade historia, técnicas artísticas...">{{ producto.descripción }}</textarea>
+                </div>
+                
+                <div class="row mb-5 g-4">
+                    <div class="col-md-6">
+                        <label class="form-label text-secondary fw-semibold">Valor Unitario (€)</label>
+                        <div class="input-group input-group-lg shadow-sm">
+                            <span class="input-group-text bg-dark border-secondary text-info">€</span>
+                            <input type="number" step="0.01" name="precio" class="form-control bg-dark text-white border-secondary" value="{{ producto.precio }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-secondary fw-semibold">Dirección de Archivo Visual</label>
+                        <div class="input-group input-group-lg shadow-sm">
+                            <span class="input-group-text bg-dark border-secondary text-info">📁</span>
+                            <input type="text" name="imagen" class="form-control bg-dark text-white border-secondary" placeholder="cuadro.jpg" value="{{ producto.imagen }}">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex flex-column flex-md-row justify-content-between mt-4 mb-2 gap-3">
+                    <a href="/" class="btn btn-outline-light px-5 py-3 rounded-pill fw-semibold">🗑️ Cancelar Volviendo al Catálogo</a>
+                    <button type="submit" class="btn btn-gradient px-5 py-3 rounded-pill fw-bold fs-5 shadow-lg">💾 Confirmar Cambios en BD</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
