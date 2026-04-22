@@ -10,21 +10,71 @@
             
             {% if error %}
             <div class="alert alert-danger bg-danger bg-opacity-25 border-danger text-white text-center rounded-pill py-3 px-4 mb-4 fw-semibold shadow-sm">
-                Credenciales inválidas. Por favor, revisa tus datos y vuelve a intentarlo.
+                Credenciales inválidas. El usuario o la contraseña provista no coinciden en nuestros registros. Verifique si hay un error tipográfico y repita el proceso.
             </div>
             {% endif %}
             
-            <form action="/login" method="POST">
+            <form action="/login" method="POST" id="loginForm">
                 <div class="mb-4">
-                    <label class="form-label text-secondary fw-semibold ps-2">Correo Electrónico de Acceso</label>
-                    <input type="email" name="email" class="form-control form-control-lg bg-dark text-white border border-secondary rounded-pill ps-4" style="background: rgba(255,255,255,0.05) !important;" required>
+                    <label for="email" class="form-label text-secondary fw-semibold ps-2">Correo Electrónico de Acceso</label>
+                    <input type="email" id="email" name="email" class="form-control form-control-lg bg-dark text-white border border-secondary rounded-pill ps-4" style="background: rgba(255,255,255,0.05) !important;" placeholder="ejemplo@correo.com" required autofocus>
+                    <div class="invalid-feedback ps-3">Por favor ingrese un correo válido.</div>
                 </div>
-                <div class="mb-5">
-                    <label class="form-label text-secondary fw-semibold ps-2">Contraseña</label>
-                    <input type="password" name="contraseña" class="form-control form-control-lg bg-dark text-white border border-secondary rounded-pill ps-4" style="background: rgba(255,255,255,0.05) !important;" required>
+                <div class="mb-5 position-relative">
+                    <label for="password" class="form-label text-secondary fw-semibold ps-2">Contraseña</label>
+                    <div class="input-group drop-shadow">
+                        <input type="password" id="password" name="contraseña" class="form-control form-control-lg bg-dark text-white border border-secondary rounded-start-pill ps-4" style="background: rgba(255,255,255,0.05) !important;" placeholder="Ingresa tu contraseña" required>
+                        <button type="button" class="btn btn-outline-secondary border-secondary rounded-end-pill px-3" id="togglePasswordBtn" style="background: rgba(255,255,255,0.05) !important;">👁️</button>
+                    </div>
+                    <div id="passwordReqs" class="form-text text-warning mt-2 ms-2" style="display: none; font-size: 0.85em;">
+                        La contraseña debe tener al menos 6 caracteres.
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-gradient btn-lg w-100 rounded-pill shadow-lg py-3 fw-bold fs-5 tracking-widest text-uppercase">Identificarse</button>
+                <button type="submit" class="btn btn-gradient btn-lg w-100 rounded-pill shadow-lg py-3 fw-bold fs-5 tracking-widest text-uppercase">Entrar a la tienda</button>
             </form>
+            
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const emailInput = document.getElementById('email');
+                    const pwInput = document.getElementById('password');
+                    const pwReqs = document.getElementById('passwordReqs');
+                    const toggleBtn = document.getElementById('togglePasswordBtn');
+
+                    // Validacion email en blur
+                    emailInput.addEventListener('blur', () => {
+                        if (emailInput.value !== '' && !emailInput.value.includes('@')) {
+                            emailInput.classList.add('is-invalid');
+                        } else {
+                            emailInput.classList.remove('is-invalid');
+                        }
+                    });
+
+                    // Requisitos pw en focus
+                    pwInput.addEventListener('focus', () => {
+                        pwReqs.style.display = 'block';
+                    });
+
+                    // Validación pw en blur
+                    pwInput.addEventListener('blur', () => {
+                        if (pwInput.value.length > 0 && pwInput.value.length < 6) {
+                            pwInput.classList.add('is-invalid');
+                            pwInput.classList.remove('border-secondary');
+                            pwInput.classList.add('border-danger');
+                        } else {
+                            pwInput.classList.remove('is-invalid', 'border-danger');
+                            pwInput.classList.add('border-secondary');
+                            pwReqs.style.display = 'none';
+                        }
+                    });
+
+                    // Toggle password
+                    toggleBtn.addEventListener('click', () => {
+                        const type = pwInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                        pwInput.setAttribute('type', type);
+                        toggleBtn.textContent = type === 'password' ? '👁️' : '🙈';
+                    });
+                });
+            </script>
         </div>
     </div>
 </div>

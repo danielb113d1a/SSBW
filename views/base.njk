@@ -125,15 +125,13 @@
                         <a href="/login" class="btn btn-outline-info rounded-pill px-4 me-3" style="border-color: var(--secondary-accent);">Entrar</a>
                     {% endif %}
                     
-                    <a href="/carrito" class="btn btn-outline-light rounded-pill position-relative d-flex align-items-center px-3" style="border-color: rgba(255,255,255,0.2);">
+                    <button type="button" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas" aria-controls="cartOffcanvas" class="btn btn-outline-light rounded-pill position-relative d-flex align-items-center px-3" style="border-color: rgba(255,255,255,0.2);">
                         <span class="fs-5 me-2">🛒</span> 
                         <span class="fw-semibold">Cesta</span>
-                        {% if total_carrito > 0 %}
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm">
+                        <span id="cartBadgeCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" {% if total_carrito <= 0 %}style="display:none;"{% endif %}>
                             {{ total_carrito }}
                         </span>
-                        {% endif %}
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -143,6 +141,136 @@
         {% block content %}{% endblock %}
     </main>
     
+    <!-- Carrito Offcanvas -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel" style="background-color: var(--bg-color); border-left: 1px solid rgba(255,255,255,0.1);">
+        <div class="offcanvas-header border-bottom border-secondary">
+            <h5 class="offcanvas-title fw-bold" id="cartOffcanvasLabel">🛒 Tu Cesta</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column">
+            
+            <div id="cartItemsContainer" class="flex-grow-1 overflow-auto">
+                <div class="text-center text-secondary mt-5" id="cartLoadingMsg">Cargando carrito...</div>
+            </div>
+            
+            <div class="mt-auto border-top border-secondary pt-3">
+                <div class="d-flex justify-content-between mb-3 fs-5 fw-bold">
+                    <span>Total General:</span>
+                    <span id="cartTotalGeneral">0.00 €</span>
+                </div>
+                <a href="/carrito" class="btn btn-gradient w-100 py-2 rounded-pill fw-bold">Ir a Pagar</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template for offcanvas item -->
+    <template id="cart-item-template">
+        <div class="cart-item card glass-card h-auto mb-3 p-2 bg-dark text-white border-secondary">
+            <div class="d-flex align-items-center">
+                <img src="" alt="Producto" class="item-img rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                <div class="ms-3 flex-grow-1">
+                    <h6 class="mb-0 item-title text-truncate" style="max-width: 150px;"></h6>
+                    <small class="text-info item-price"></small>
+                </div>
+                <div class="px-2 fw-bold item-quantity"></div>
+                <button class="btn btn-sm btn-outline-danger btn-delete-item ms-2 rounded-circle" style="width: 32px; height: 32px; padding: 0;">🗑️</button>
+            </div>
+        </div>
+    </template>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cartOffcanvasEl = document.getElementById('cartOffcanvas');
+            const cartItemsContainer = document.getElementById('cartItemsContainer');
+            const cartTotalGeneral = document.getElementById('cartTotalGeneral');
+            const cartBadgeCount = document.getElementById('cartBadgeCount');
+            const template = document.getElementById('cart-item-template');
+
+            cartOffcanvasEl.addEventListener('show.bs.offcanvas', () => {
+                cartItemsContainer.innerHTML = '<div class="text-center text-secondary mt-5">Cargando carrito...</div>';
+                
+                fetch('/api/carrito')
+                    .then(response => response.json())
+                    .then(data => {
+                        cartItemsContainer.innerHTML = ''; // Limpiar
+                        
+                        if (data.items.length === 0) {
+                            cartItemsContainer.innerHTML = '<div class="text-center text-secondary mt-5">Tu carrito está vacío</div>';
+                            cartTotalGeneral.textContent = '0.00 €';
+                            return;
+                        }
+                        
+                        cartTotalGeneral.textContent = data.total + ' €';
+                        
+                        // Iterar y clonar
+                        data.items.forEach(item => {
+                            const clone = document.importNode(template.content, true);
+                            
+                            const cartItemDiv = clone.querySelector('.cart-item');
+                            
+                            clone.querySelector('.item-img').src = '/public/imagenes/' + item.imagen;
+                            clone.querySelector('.item-title').textContent = item.título;
+                            clone.querySelector('.item-price').textContent = item.subtotal + ' €';
+                            clone.querySelector('.item-quantity').textContent = 'x' + item.cantidad;
+                            
+                            const btnDelete = clone.querySelector('.btn-delete-item');
+                            btnDelete.addEventListener('click', () => {
+                                eliminarItem(item.id, cartItemDiv);
+                            });
+                            
+                            cartItemsContainer.appendChild(clone);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching cart:', error);
+                        cartItemsContainer.innerHTML = '<div class="text-center text-danger mt-5">Error al cargar el carrito</div>';
+                    });
+            });
+
+            function eliminarItem(id, domNode) {
+                // Hacer btn disable para prevenir doble click
+                const btn = domNode.querySelector('.btn-delete-item');
+                btn.disabled = true;
+                
+                fetch('/api/carrito/' + id, {
+                    method: 'DELETE'
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        // Eliminar dinamicamente del DOM sin refrescar
+                        domNode.remove();
+                        
+                        // Actualizar badge total_carrito global
+                        if (data.newTotal > 0) {
+                            cartBadgeCount.textContent = data.newTotal;
+                            cartBadgeCount.style.display = 'inline-block';
+                        } else {
+                            cartBadgeCount.style.display = 'none';
+                            cartItemsContainer.innerHTML = '<div class="text-center text-secondary mt-5">Tu carrito está vacío</div>';
+                        }
+                        
+                        // Recalcular total? Se podria, pero el total nos lo podria dar el backend, 
+                        // o lo podemos pedir de vuelta abriendo el canvas, o actualizar el endpoint para que devuelva total tambien.
+                        // Para simplificar la demo abrimos de nuevo el fetch silente, o asumimos recalculación.
+                        // Hagamos un refetch rapido para actualizar totales:
+                        fetch('/api/carrito')
+                            .then(r => r.json())
+                            .then(d => {
+                                cartTotalGeneral.textContent = d.total + ' €';
+                            });
+                    } else {
+                        btn.disabled = false;
+                        alert('No se pudo borrar el item.');
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    btn.disabled = false;
+                });
+            }
+        });
+    </script>
 </body>
 </html>

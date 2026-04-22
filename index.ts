@@ -12,6 +12,7 @@ import UsuariosRouter from './routes/usuarios.ts';
 import ApiProductosRouter from './routes/api-productos.ts';
 import AdminRouter from './routes/admin.ts';
 import CarritoRouter from './routes/carrito.ts';
+import ApiCarritoRouter from './routes/api-carrito.ts';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -72,6 +73,7 @@ app.use('/public/imagenes', express.static(path.resolve('imagenes')));
 
 // Rutas
 app.use('/api/productos', ApiProductosRouter);
+app.use('/api/carrito', ApiCarritoRouter);
 app.use('/admin', AdminRouter);
 app.use('/carrito', CarritoRouter);
 app.use('/', UsuariosRouter);
