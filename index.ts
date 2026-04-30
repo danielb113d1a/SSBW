@@ -5,6 +5,8 @@ import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import jwt from 'jsonwebtoken';
 import logger from './logger.ts';
+import cors from 'cors';
+import fs from 'fs';
 
 // Importamos los enrutadores
 import ProductosRouter from './routes/productos.ts';
@@ -28,6 +30,7 @@ nunjucks.configure('views', {
 app.set('view engine', 'njk');
 
 // Middlewares vitales
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); // Necesario para POST / PUT en la API JSON
 app.use(cookieParser());
@@ -70,6 +73,22 @@ app.use((req, res, next) => {
 
 // Middleware de archivos estáticos (imágenes)
 app.use('/public/imagenes', express.static(path.resolve('imagenes')));
+
+app.get('/api/random-image', (req, res) => {
+    try {
+        const dirPath = path.resolve('imagenes');
+        const files = fs.readdirSync(dirPath);
+        const images = files.filter(f => f.endsWith('.jpg') || f.endsWith('.png') || f.endsWith('.jpeg'));
+        if (images.length === 0) {
+            return res.status(404).json({ error: 'No images found' });
+        }
+        const randomImage = images[Math.floor(Math.random() * images.length)];
+        const baseUrl = `${req.protocol}://${req.get('host')}`;
+        res.json({ url: `${baseUrl}/public/imagenes/${randomImage}` });
+    } catch (e) {
+        res.status(500).json({ error: 'Error reading images' });
+    }
+});
 
 // Rutas
 app.use('/api/productos', ApiProductosRouter);
