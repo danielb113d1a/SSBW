@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@import "daisyui/daisyui.css";
+@theme {
+  --font-montserrat: "Montserrat", sans-serif;
+  --color-olive-300: #a3b18a;
+  --color-olive-400: #588157;
+};

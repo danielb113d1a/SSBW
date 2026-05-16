@@ -1,0 +1,53 @@
+---
+// Welcome.astro
+---
+
+<div class="flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-3xl w-full space-y-8 text-center">
+    <div>
+      <h1 class="text-4xl font-extrabold text-base-content sm:text-5xl sm:tracking-tight lg:text-6xl">
+        Bienvenido a la Tarea 11
+      </h1>
+      <p class="max-w-xl mt-5 mx-auto text-xl text-base-content/70">
+        Sitio estático generado con Astro, integrando React, Tailwind CSS y DaisyUI.
+      </p>
+    </div>
+
+    <div class="mt-12 bg-base-100 rounded-xl shadow-lg overflow-hidden border border-base-300">
+      <!-- Usaremos un enfoque más sencillo para el Astro (sin estado de React para los tabs) o un simple HTML CSS-only tabs de DaisyUI -->
+      <div role="tablist" class="tabs tabs-lifted tabs-lg bg-base-200 pt-2 px-2">
+        <input type="radio" name="my_tabs" role="tab" class="tab" aria-label="Objetivos" checked="checked" />
+        <div role="tabpanel" class="tab-content bg-base-100 border-base-300 p-8 text-left min-h-[200px]">
+          <h3 class="text-2xl font-bold mb-4">Objetivos de la Práctica</h3>
+          <ul class="list-disc pl-5 space-y-2 text-lg text-base-content/80">
+            <li>Crear un proyecto con el framework Astro.</li>
+            <li>Configurar Tailwind CSS y DaisyUI.</li>
+            <li>Integrar componentes de React con `client:load` (Island Architecture).</li>
+            <li>Preparar el terreno para Static Site Generation (SSG).</li>
+          </ul>
+        </div>
+
+        <input type="radio" name="my_tabs" role="tab" class="tab" aria-label="Tecnologías" />
+        <div role="tabpanel" class="tab-content bg-base-100 border-base-300 p-8 text-left min-h-[200px]">
+          <h3 class="text-2xl font-bold mb-4">Stack Tecnológico</h3>
+          <div class="flex flex-wrap gap-3">
+            <span class="badge badge-primary badge-lg">Astro</span>
+            <span class="badge badge-secondary badge-lg">React</span>
+            <span class="badge badge-accent badge-lg">Tailwind CSS v4</span>
+            <span class="badge badge-neutral badge-lg">DaisyUI</span>
+            <span class="badge badge-success badge-lg">Swiper</span>
+          </div>
+        </div>
+
+        <input type="radio" name="my_tabs" role="tab" class="tab" aria-label="Resultados" />
+        <div role="tabpanel" class="tab-content bg-base-100 border-base-300 p-8 text-left min-h-[200px]">
+          <h3 class="text-2xl font-bold mb-4">Arquitectura de Islas</h3>
+          <p class="text-lg text-base-content/80">
+            En Astro, por defecto se envía 0 JavaScript al navegador. Esta página (Welcome) es completamente estática HTML y CSS.
+            Sin embargo, en la página del carrusel, indicamos explícitamente a Astro que hidrate el componente de React para hacerlo interactivo.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
